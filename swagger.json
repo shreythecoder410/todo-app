@@ -1,0 +1,170 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Todo App API",
+    "version": "1.0.0",
+    "description": "API documentation for Todo Backend Application"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Todo",
+      "description": "Todo management APIs"
+    }
+  ],
+  "paths": {
+    "/api/create": {
+      "post": {
+        "tags": ["Todo"],
+        "summary": "Create a new Todo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Todo created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Todo"],
+        "summary": "Get all Todos",
+        "responses": {
+          "200": {
+            "description": "List of todos"
+          }
+        }
+      }
+    },
+    "/api/{id}": {
+      "get": {
+        "tags": ["Todo"],
+        "summary": "Get Todo by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todo found"
+          },
+          "404": {
+            "description": "Todo not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Todo"],
+        "summary": "Update Todo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Todo updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Todo"],
+        "summary": "Delete Todo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todo deleted"
+          }
+        }
+      }
+    },
+    "/api/{id}/toggle": {
+      "patch": {
+        "tags": ["Todo"],
+        "summary": "Toggle Todo completion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todo status toggled"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TodoRequest": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Learn Node.js"
+          },
+          "description": {
+            "type": "string",
+            "example": "Practice backend CRUD"
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      }
+    }
+  }
+}
