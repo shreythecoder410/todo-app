@@ -35,11 +35,43 @@ class TodoController {
 
     async getTodo(req, res) {
         try {
-            const todo = await ToDo.find();
-            return res.status(200).json({
-                success: true,
-                data: todo
-            })
+
+          const {
+            page=1,
+            limit=5,
+            search="",
+            completed,
+            sort="desc"
+          } = req.query
+
+          const filter={}
+
+          if(search){
+            filter.title={$regex: search, $option:"i"}
+          }
+
+          if(completed !==undefined){
+            filter.isCompleted = completed ==="true"
+          }
+
+          const todos = await ToDo.find(filter)
+          .sort({ createdAt : sort === "asc" ?1:-1})
+          .skip(skip)
+          .limit(Number(limit))
+
+
+          const total = await ToDo.countDocuments(filter)
+
+          return res.status(200).json({
+            success: true,
+            page: Number(page),
+            limit: Number(limit),
+            total,
+            totalPages: Math.ceil(total / limit),
+            data: todos
+          })
+
+
         } catch (error) {
             return res.status(500).json({ success: false, message: error.message })
         }
